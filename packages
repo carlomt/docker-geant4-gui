@@ -7,3 +7,4 @@ pkg-config
 libxerces-c-dev
 libexpat1-dev
 qt5-default
+libqt5opengl5-dev
