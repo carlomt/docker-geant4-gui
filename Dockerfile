@@ -14,14 +14,6 @@ COPY packages packages
 
 RUN apt-get update && \
 apt-get -yq --no-install-recommends install \
-cmake \
-wget \
-g++ \
-make \
-ninja-build \
-pkg-config \
-libxerces-c-dev \
-libexpat1-dev \
 $(cat packages) \
 && apt-get clean \
 && rm -rf /var/cache/apt/archives/* \
@@ -54,16 +46,10 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+COPY packages packages
+
 RUN apt-get update && \
 apt-get -yq --no-install-recommends install \
-cmake \
-wget \
-g++ \
-make \
-ninja-build \
-pkg-config \
-libxerces-c-dev \
-libexpat1-dev \
 $(cat packages) \
 && apt-get clean \
 && rm -rf /var/cache/apt/archives/* \
