@@ -67,11 +67,10 @@ ca-certificates \
 && rm -rf /var/cache/apt/archives/* \
 && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /opt/geant4/data && chmod 777 /opt/geant4/data
-
 COPY --from=builder /opt/geant4/ /opt/geant4/
 COPY --from=builder /workspace/geant4/src/examples/ /examples/
-#COPY entry-point.sh /opt/entry-point.sh
+
+RUN mkdir -p /opt/geant4/data && chmod 777 /opt/geant4/data
 
 ENV DISPLAY :0
 

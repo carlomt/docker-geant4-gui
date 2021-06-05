@@ -52,5 +52,10 @@ on the second terminal run the container:
 
 `docker run --net=host --env="DISPLAY" -e DISPLAY=docker.for.mac.host.internal:0 --user $(id -u):$(id -g)  --volume="$HOME/docker_home/:$HOME" --volume="$HOME/.Xauthority:$HOME/.Xauthority:rw" -it --rm carlomt/geant4-gui`
 
+### Geant4 examples
 
+The Geant4 examples are in the
 
+`/examples/`
+
+folder inside the container. You do not have writing permission in that folder (and in its subfolder), I suggest you to copy the example you wish to modify in your home folder.
