@@ -27,11 +27,13 @@ $(cat packages) \
 && rm -rf /var/cache/apt/archives/* \
 && rm -rf /var/lib/apt/lists/*
 
-RUN mkdir -p /workspace/geant4/src && \
+RUN \
+    # mkdir -p /workspace/geant4/src && \
     mkdir -p /workspace/geant4/build && \
     mkdir -p /opt/geant4/ && \
     wget --no-check-certificate -O /workspace/geant4.tar.gz http://geant4-data.web.cern.ch/geant4-data/releases/source/geant4.${G4_VERSION}.tar.gz && \
-    tar xf /workspace/geant4.tar.gz -C /workspace/geant4/src && \
+    tar xf /workspace/geant4.tar.gz -C /workspace/geant4/ && \
+    mv /workspace/geant4/geant4.${G4_VERSION}/ /workspace/geant4/src/ && \
     cd /workspace/geant4/build && \
     cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/opt/geant4 \
     -DGEANT4_INSTALL_DATA=OFF \
@@ -40,9 +42,9 @@ RUN mkdir -p /workspace/geant4/src && \
     -DGEANT4_USE_GDML=ON \
     -DGEANT4_USE_QT=ON \
     -DGEANT4_INSTALL_EXAMPLES=OFF \
-    ../src/geant4.${G4_VERSION} && \
+    ../src/ && \
      ninja install
-
+    
 #######################################################################
 
 FROM $BASE_IMAGE
@@ -72,15 +74,21 @@ apt-get -yq --no-install-recommends install \
 git \
 zip \
 unzip \
+curl \
+openssl \
+ca-certificates \
 && apt-get clean \
 && rm -rf /var/cache/apt/archives/* \
 && rm -rf /var/lib/apt/lists/*
 
+RUN mkdir -p /opt/geant4/data && chmod 777 /opt/geant4/data
+
 COPY --from=builder /opt/geant4/ /opt/geant4/
-#COPY --from=builder /workspace/geant4/src/geant4.${G4_VERSION}/examples/ /examples/
+COPY --from=builder /workspace/geant4/src/examples/ /examples/
 #COPY entry-point.sh /opt/entry-point.sh
 
 ENV DISPLAY :0
 
-#ENTRYPOINT ["/opt/entry-point.sh"]
-CMD ["/bin/bash"]
+COPY bash.bashrc /etc/bash.bashrc
+
+SHELL ["/bin/bash", "--login", "-c"]
