@@ -14,10 +14,15 @@ COPY packages packages
 
 RUN apt-get update && \
 apt-get -yq --no-install-recommends install \
-$(cat packages) \
+$(cat packages) 
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+RUN apt-get update && \
+apt-get -yq install \
+cmake \
 && apt-get clean \
 && rm -rf /var/cache/apt/archives/* \
 && rm -rf /var/lib/apt/lists/*
+
 
 RUN \
     # mkdir -p /workspace/geant4/src && \
@@ -50,7 +55,12 @@ COPY packages packages
 
 RUN apt-get update && \
 apt-get -yq --no-install-recommends install \
-$(cat packages) \
+$(cat packages) 
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
+RUN apt-get update && \
+apt-get -yq install \
+cmake \
+cmake-curses-gui \
 && apt-get clean \
 && rm -rf /var/cache/apt/archives/* \
 && rm -rf /var/lib/apt/lists/*
@@ -62,7 +72,6 @@ zip \
 unzip \
 curl \
 openssl \
-ca-certificates \
 && apt-get clean \
 && rm -rf /var/cache/apt/archives/* \
 && rm -rf /var/lib/apt/lists/*

@@ -1,4 +1,7 @@
-cmake
+apt-transport-https
+ca-certificates
+gnupg
+software-properties-common
 wget
 g++
 make
