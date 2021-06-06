@@ -2,6 +2,11 @@
 
 ## Docker container with Geant4 and Qt5 to have Geant4 GUI
 
+you can download this container with:
+
+`docker pull carlomt/geant4-gui`
+
+
 ### Linux
 I suggest to run it on linux with:
 
