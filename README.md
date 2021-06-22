@@ -6,6 +6,10 @@ you can download this container with:
 
 `docker pull carlomt/geant4-gui`
 
+## Tags:
+
+* [`latest`]
+* [`centos`]
 
 ### Linux
 I suggest to run it on linux with:
@@ -61,6 +65,6 @@ on the second terminal run the container:
 
 The Geant4 examples are in the
 
-`/examples/`
+`/opt/geant4/examples/`
 
 folder inside the container. You do not have writing permission in that folder (and in its subfolder), I suggest you to copy the example you wish to modify in your home folder.

@@ -2,7 +2,7 @@ ARG BASE_IMAGE=ubuntu:focal
 
 FROM $BASE_IMAGE AS builder
 
-ENV G4_VERSION 10.07.p01
+ENV G4_VERSION 10.07.p02
 
 WORKDIR /workspace
 
@@ -77,12 +77,15 @@ openssl \
 && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /opt/geant4/ /opt/geant4/
-COPY --from=builder /workspace/geant4/src/examples/ /examples/
+COPY --from=builder /workspace/geant4/src/examples/ /opt/geant4/examples/
 
 RUN mkdir -p /opt/geant4/data && chmod 777 /opt/geant4/data
 
 ENV DISPLAY :0
 
-COPY bash.bashrc /etc/bash.bashrc
+COPY bash.bashrc /etc/profile.d/custom.sh
+RUN chmod +x /etc/profile.d/custom.sh
+
+RUN echo "source /etc/profile.d/custom.sh" >> /etc/profile
 
 SHELL ["/bin/bash", "--login", "-c"]
