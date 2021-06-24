@@ -90,7 +90,9 @@ RUN yum update -q -y \
 
 RUN yum update -q -y \
  && yum install -y centos-release-scl centos-release-scl-rh \
- && yum install -y $(cat packages) \
+ && yum install -y $(cat packages)
+
+RUN yum install -y openssl \
  && yum clean all
 
 COPY --from=builder /opt/geant4/ /opt/geant4/

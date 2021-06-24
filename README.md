@@ -59,7 +59,7 @@ Open a socket on that port and keep the terminal open
 
 on the second terminal run the container:
 
-`docker run --net=host --env="DISPLAY" -e DISPLAY=docker.for.mac.host.internal:0 --user $(id -u):$(id -g)  --volume="$HOME/docker_home/:$HOME" --volume="$HOME/.Xauthority:$HOME/.Xauthority:rw" -it --rm carlomt/geant4-gui`
+`docker run --net=host --env="DISPLAY" -e DISPLAY=docker.for.mac.host.internal:0 --user $(id -u):$(id -g)  --volume="$HOME/docker_home/:$HOME" --volume="$HOME/.Xauthority:$HOME/.Xauthority:rw" --volume="$HOME/SOME_PATH/geant4-data:/opt/geant4/data" -it --rm carlomt/geant4-gui`
 
 ### Geant4 examples
 
@@ -68,3 +68,16 @@ The Geant4 examples are in the
 `/opt/geant4/examples/`
 
 folder inside the container. You do not have writing permission in that folder (and in its subfolder), I suggest you to copy the example you wish to modify in your home folder.
+
+
+### Geant4 datasets
+
+To keep the size of the Docker images limited, the Geant4 datasets are not installed. They expect to find the datasets in
+`/opt/geant4/data`
+I suggest you to map a folder in the host to use always the same dataset with the option:
+
+`--volume="$HOME/SOME_PATH/geant4-data:/opt/geant4/data`
+
+The image will check the datasets at login, if some are missing install them with:
+
+`geant4-config  --install-datasets`
