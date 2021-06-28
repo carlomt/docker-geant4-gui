@@ -1,0 +1,13 @@
+export QT_X11_NO_MITSHM=1
+export LIBGL_DEBUG=verbose
+
+## DICOM Toolkit (DCMTK)
+#https://dicom.offis.de/dcmtk.php.en
+export DCMTK_BASE_DIR=/opt/dcmtk
+export PATH=$DCMTK_BASE_DIR/bin:$PATH
+export LD_LIBRARY_PATH=$DCMTK_BASE_DIR/lib64:$LD_LIBRARY_PATH
+
+## gMocren
+alias gMocren4=/opt/gmocren/gMocren4
+alias gMocren4-bin=/opt/gmocren/gMocren4-bin
+alias gmocren=/opt/gmocren/gMocren4

@@ -11,24 +11,20 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY packages packages
-
-RUN apt-get update && \
-apt-get -yq --no-install-recommends install \
-$(cat packages) 
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
-RUN apt-get update && \
-apt-get -yq install \
-cmake \
-&& apt-get clean \
-&& rm -rf /var/cache/apt/archives/* \
-&& rm -rf /var/lib/apt/lists/*
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+    | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+    apt-get update && \
+    apt-get -yq --no-install-recommends install \
+    $(cat packages) && \
+    apt-get clean && \
+    rm -rf /var/cache/apt/archives/* && \
+    rm -rf /var/lib/apt/lists/*
 
 
-RUN \
-    # mkdir -p /workspace/geant4/src && \
-    mkdir -p /workspace/geant4/build && \
+RUN mkdir -p /workspace/geant4/build && \
     mkdir -p /opt/geant4/ && \
-    wget --no-check-certificate -O /workspace/geant4.tar.gz http://geant4-data.web.cern.ch/geant4-data/releases/source/geant4.${G4_VERSION}.tar.gz && \
+    wget --quiet --no-check-certificate -O /workspace/geant4.tar.gz \
+    http://geant4-data.web.cern.ch/geant4-data/releases/source/geant4.${G4_VERSION}.tar.gz && \
     tar xf /workspace/geant4.tar.gz -C /workspace/geant4/ && \
     mv /workspace/geant4/geant4.${G4_VERSION}/ /workspace/geant4/src/ && \
     cd /workspace/geant4/build && \
@@ -52,29 +48,27 @@ RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 ENV DEBIAN_FRONTEND=noninteractive
 
 COPY packages packages
+RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
+    | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+    apt-get update && \
+    apt-get -yq --no-install-recommends install \    
+    $(cat packages) \
+    cmake-curses-gui \
+    git \
+    zip \
+    unzip \
+    curl \
+    openssl \
+    less \
+    emacs-nox \
+    grep \
+    sed \
+    && \
+    apt-get clean && \
+    rm -rf /var/cache/apt/archives/* && \
+    rm -rf /var/lib/apt/lists/*
 
-RUN apt-get update && \
-apt-get -yq --no-install-recommends install \
-$(cat packages) 
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null
-RUN apt-get update && \
-apt-get -yq install \
-cmake \
-cmake-curses-gui \
-&& apt-get clean \
-&& rm -rf /var/cache/apt/archives/* \
-&& rm -rf /var/lib/apt/lists/*
-
-RUN apt-get update && \
-apt-get -yq --no-install-recommends install \
-git \
-zip \
-unzip \
-curl \
-openssl \
-&& apt-get clean \
-&& rm -rf /var/cache/apt/archives/* \
-&& rm -rf /var/lib/apt/lists/*
+RUN git clone --branch stable https://github.com/nojhan/liquidprompt.git /opt/liquidprompt
 
 COPY --from=builder /opt/geant4/ /opt/geant4/
 COPY --from=builder /workspace/geant4/src/examples/ /opt/geant4/examples/
@@ -84,8 +78,6 @@ RUN mkdir -p /opt/geant4/data && chmod 777 /opt/geant4/data
 ENV DISPLAY :0
 
 COPY bash.bashrc /etc/profile.d/custom.sh
-RUN chmod +x /etc/profile.d/custom.sh
+# RUN echo "source /etc/profile.d/custom.sh" >> /etc/profile
 
-RUN echo "source /etc/profile.d/custom.sh" >> /etc/profile
-
-SHELL ["/bin/bash", "--login", "-c"]
+ENTRYPOINT  ["/usr/bin/bash", "-l"]

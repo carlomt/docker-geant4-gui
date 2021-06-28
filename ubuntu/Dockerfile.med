@@ -1,0 +1,49 @@
+ARG BASE_IMAGE=carlomt/geant4-gui
+
+FROM $BASE_IMAGE AS builder
+
+RUN mkdir /workspace && \ 
+    cd /workspace && \
+    git clone https://github.com/DCMTK/dcmtk.git && \
+    cd dcmtk/ && \
+    git checkout tags/DCMTK-3.6.6 && \
+    mkdir build && \
+    cd build && \
+    cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/opt/dcmtk \
+    -DDCMTK_ENABLE_CXX11=ON \
+    -DCMAKE_POSITION_INDEPENDENT_CODE=ON \
+    ../ && \
+    ninja install
+    
+#######################################################################
+
+FROM $BASE_IMAGE
+
+ENV LANG=C.UTF-8
+RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
+
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get -yq --no-install-recommends install \
+    libgtkglext1 \
+    && \
+    apt-get clean && \
+    rm -rf /var/cache/apt/archives/* && \
+    rm -rf /var/lib/apt/lists/*
+
+COPY --from=builder /opt/dcmtk/ /opt/dcmtk/
+
+COPY gMocren4-centos7.4-64bit-20190731.tgz /workspace/gMocren.tgz
+RUN tar xzf /workspace/gMocren.tgz -C  /workspace/ && \
+    mkdir -p /opt/gmocren && \
+    cp -r /workspace/gMocren4/* /opt/gmocren/ && \
+    rm -f /workspace/gMocren.tgz && \
+    chmod -R 777 /opt/gmocren/gtk+-2.24.30/etc/
+
+ENV DISPLAY :0
+
+COPY bashrc.med /etc/profile.d/med.sh
+# RUN echo "source /etc/profile.d/med.sh" >> /etc/profile
+
+# ENTRYPOINT  ["/usr/bin/bash", "-i", "--rcfile /etc/profile"]
+ENTRYPOINT  ["/usr/bin/bash", "-l"]
