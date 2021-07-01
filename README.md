@@ -41,7 +41,11 @@ install socat:
 
 `brew install socat`
 
-reboot your mac
+reboot your mac.
+
+In MacOs the user information are not saved in a text file, I suggest to create such a file to pass it to the container:
+
+`echo "$USER:x:$(id -u):$(id -g):$(id -F),,,:/home/$USER:/bin/bash" > ~/docker_home/.config/passwd`
 
 You will need 2 terminals open: one for the socat with the display and the other for running Docker
 
@@ -57,13 +61,9 @@ Open a socket on that port and keep the terminal open
 
 `socat TCP-LISTEN:6000,reuseaddr,fork UNIX-CLIENT:\"$DISPLAY\"`
 
-In MacOs the user information are not saved in a text file, I suggest to create such a file to pass it to the container:
-
-`echo "$USER:x:$(id -u):$(id -g):$(id -F),,,:/home/$USER:/bin/bash" > ~/docker_home/.config/passwd`
-
 on the second terminal run the container:
 
-`docker run --net=host --env="DISPLAY" -e DISPLAY=docker.for.mac.host.internal:0 --user $(id -u):$(id -g)  --volume="$HOME/docker_home/:$HOME" --volume="$HOME/.Xauthority:$HOME/.Xauthority:rw" --volume="$HOME/SOME_PATH/geant4-data:/opt/geant4/data" -it --rm carlomt/geant4-gui`
+`docker run --net=host --env="DISPLAY" -e DISPLAY=docker.for.mac.host.internal:0 --user $(id -u):$(id -g) --volume="$HOME/docker_home/.config/passwd:/etc/passwd:ro" --volume="$HOME/docker_home/:$HOME" --volume="$HOME/.Xauthority:$HOME/.Xauthority:rw" --volume="$HOME/SOME_PATH/geant4-data:/opt/geant4/data" -it --rm carlomt/geant4-gui`
 
 ### Geant4 examples
 
