@@ -10,9 +10,15 @@ ENV LANG=C.UTF-8
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 ENV DEBIAN_FRONTEND=noninteractive
 
+RUN apt-get update && \
+    apt-get -yq --no-install-recommends install \ 
+    gnupg2 \
+    software-properties-common
+    
 COPY packages packages
 RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
     | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+    add-apt-repository ppa:git-core/ppa && \
     apt-get update && \
     apt-get -yq --no-install-recommends install \
     $(cat packages) && \
@@ -34,6 +40,7 @@ RUN mkdir -p /workspace/geant4/build && \
     -DGEANT4_BUILD_MULTITHREADED=ON \
     -DGEANT4_USE_GDML=ON \
     -DGEANT4_USE_QT=ON \
+    -DGEANT4_USE_OPENGL_X11=ON \
     -DGEANT4_INSTALL_EXAMPLES=OFF \
     ../src/ && \
      ninja install
@@ -45,11 +52,16 @@ FROM $BASE_IMAGE
 ENV LANG=C.UTF-8
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
-ENV DEBIAN_FRONTEND=noninteractive
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    apt-get update && \
+    apt-get -yq --no-install-recommends install \ 
+    gnupg2 \
+    software-properties-common    
 
 COPY packages packages
-RUN wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null \
-    | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+RUN export DEBIAN_FRONTEND=noninteractive && \
+    wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | gpg --dearmor - | tee /etc/apt/trusted.gpg.d/kitware.gpg >/dev/null && \
+    add-apt-repository ppa:git-core/ppa && \    
     apt-get update && \
     apt-get -yq --no-install-recommends install \    
     $(cat packages) \

@@ -1,6 +1,5 @@
 apt-transport-https
 ca-certificates
-gnupg
 software-properties-common
 wget
 g++
@@ -12,3 +11,5 @@ libxerces-c-dev
 libexpat1-dev
 qt5-default
 libqt5opengl5-dev
+libx11-dev
+libxmu-dev

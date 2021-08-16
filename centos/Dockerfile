@@ -79,7 +79,7 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US.UTF-8
 ENV LC_COLLATE=C
 ENV LC_CTYPE=en_US.UTF-8
-ENV XDG_RUNTIME_DIR=/workspace
+ENV XDG_RUNTIME_DIR=/run/user/1000
 
 RUN ln -sf /usr/share/zoneinfo/UTC /etc/localtime
 
@@ -92,7 +92,7 @@ RUN yum update -q -y \
  && yum install -y centos-release-scl centos-release-scl-rh \
  && yum install -y $(cat packages)
 
-RUN yum install -y openssl \
+RUN yum install -y openssl mesa-dri-drivers \
  && yum clean all
 
 COPY --from=builder /opt/geant4/ /opt/geant4/
@@ -114,5 +114,23 @@ COPY bash.bashrc /etc/profile.d/custom.sh
 RUN chmod +x /etc/profile.d/custom.sh
 
 RUN echo "source /etc/profile.d/custom.sh" >> /etc/profile
+
+RUN mkdir -p /run/user/1000 && \
+    chmod 0700 /run/user/1000
+
+ENV QT_X11_NO_MITSHM=1
+ENV LIBGL_DEBUG=verbose
+
+# RUN \
+#   mkdir -p /workspace/qt5
+# && \
+#   wget --no-check-certificate --quiet -O qt.run http://download.qt.io/official_releases/qt/5.12/5.12.11/qt-opensource-linux-x64-5.12.11.run # &&\
+
+#COPY qt-installer-noninteractive.qs /workspace/qt-installer-noninteractive.qs
+
+COPY qt-opensource-linux-x64-5.12.11.run /workspace/qt-opensource-linux-x64-5.12.11.run
+#RUN chmod +x /workspace/qt-opensource-linux-x64-5.12.11.run
+
+# RUN /workspace/qt-opensource-linux-x64-5.12.11.run --script /workspace/qt-installer-noninteractive.qs -platform minimal
 
 CMD  [ "/usr/bin/bash", "--login"]

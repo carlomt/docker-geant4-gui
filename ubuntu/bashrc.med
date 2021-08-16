@@ -8,6 +8,7 @@ export PATH=$DCMTK_BASE_DIR/bin:$PATH
 export LD_LIBRARY_PATH=$DCMTK_BASE_DIR/lib64:$LD_LIBRARY_PATH
 
 ## gMocren
-alias gMocren4=/opt/gmocren/gMocren4
-alias gMocren4-bin=/opt/gmocren/gMocren4-bin
-alias gmocren=/opt/gmocren/gMocren4
+export GMOCREN_BASE_DIR=/opt/gmocren
+alias gMocren4=$GMOCREN_BASE_DIR/gMocren4
+alias gMocren4-bin=$GMOCREN_BASE_DIR/gMocren4-bin
+alias gmocren=$GMOCREN_BASE_DIR/gMocren4
