@@ -35,6 +35,7 @@ RUN mkdir -p /workspace/geant4/build && \
     mv /workspace/geant4/geant4.${G4_VERSION}/ /workspace/geant4/src/ && \
     cd /workspace/geant4/build && \
     cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/opt/geant4 \
+    -DGEANT4_BUILD_CXXSTD=17 \
     -DGEANT4_INSTALL_DATA=OFF \
     -DGEANT4_INSTALL_DATADIR=/opt/geant4/data \
     -DGEANT4_BUILD_MULTITHREADED=ON \
