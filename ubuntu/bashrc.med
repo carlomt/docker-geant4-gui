@@ -1,6 +1,10 @@
 export QT_X11_NO_MITSHM=1
 export LIBGL_DEBUG=verbose
 
+## clang
+export CC=/usr/bin/clang
+export CXX=/usr/bin/clang++
+
 ## DICOM Toolkit (DCMTK)
 #https://dicom.offis.de/dcmtk.php.en
 export DCMTK_BASE_DIR=/opt/dcmtk

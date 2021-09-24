@@ -1,4 +1,4 @@
-ARG BASE_IMAGE=carlomt/geant4-gui
+ARG BASE_IMAGE=carlomt/geant4-gui:debug
 
 FROM $BASE_IMAGE AS builder
 

@@ -36,6 +36,7 @@ RUN mkdir -p /workspace/geant4/build && \
     git clone -b 'geant4-10.7-release' --single-branch --depth 1 https://github.com/carlomt/geant4.git /workspace/geant4/src/ && \
     cd /workspace/geant4/build && \
     cmake -G Ninja -DCMAKE_INSTALL_PREFIX=/opt/geant4 \
+    -DCMAKE_BUILD_TYPE=Debug \
     -DGEANT4_BUILD_CXXSTD=17 \
     -DGEANT4_INSTALL_DATA=OFF \
     -DGEANT4_INSTALL_DATADIR=/opt/geant4/data \
