@@ -1,3 +1,5 @@
+deprecated, use carlomt/geant4:latest-gui instead
+
 # docker-geant4-gui
 
 ## Docker container with Geant4 and Qt5 to have Geant4 GUI
