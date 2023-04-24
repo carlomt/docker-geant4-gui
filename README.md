@@ -1,4 +1,4 @@
-deprecated, use carlomt/geant4:latest-gui instead
+# deprecated, use carlomt/geant4:latest-gui instead
 
 # docker-geant4-gui
 
